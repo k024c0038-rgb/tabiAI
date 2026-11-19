@@ -48,10 +48,11 @@
       "zh": "中文",
       "en": "English"
     },
-    "demoBanner": "演示模式：未连接 {services}，正在使用示例数据运行。目的地可尝试“京都・东京・大阪・金泽・札幌”。创建的数据只保存在此浏览器中。",
+    "demoBanner": "演示模式：未连接 {services}，正在使用示例数据运行。目的地可尝试“京都・东京・大阪・金泽・札幌”。",
     "demoPhotos": "演示模式下无法上传照片（连接 Supabase 后可用）",
     "demoMap": "简易地图（演示模式）",
-    "guest": "游客"
+    "guest": "游客",
+    "demoBannerLocal": "创建的数据只保存在此浏览器中。"
   },
   "home": {
     "title": "想去哪里？",

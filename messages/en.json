@@ -48,10 +48,11 @@
       "zh": "中文",
       "en": "English"
     },
-    "demoBanner": "Demo mode: running on sample data without {services}. Try Kyoto, Tokyo, Osaka, Kanazawa or Sapporo as a destination. Your data is saved only in this browser.",
+    "demoBanner": "Demo mode: running on sample data without {services}. Try Kyoto, Tokyo, Osaka, Kanazawa or Sapporo as a destination.",
     "demoPhotos": "Photo uploads are disabled in demo mode (connect Supabase to enable them)",
     "demoMap": "Simple map (demo mode)",
-    "guest": "Guest"
+    "guest": "Guest",
+    "demoBannerLocal": "Your data is saved only in this browser."
   },
   "home": {
     "title": "Where are you going?",

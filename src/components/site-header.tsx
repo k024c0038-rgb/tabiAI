@@ -4,7 +4,7 @@ import { getUser } from "@/lib/supabase/server";
 import { isRegistered } from "@/lib/supabase/user";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { Button } from "@/components/ui/button";
-import { mockedServices } from "@/lib/mock/config";
+import { MOCK_SUPABASE, mockedServices } from "@/lib/mock/config";
 
 export async function SiteHeader() {
   const t = await getTranslations("common");
@@ -13,7 +13,11 @@ export async function SiteHeader() {
   return (
     <>
       {mocked.length > 0 && (
-        <p className="bg-amber-100 px-4 py-1.5 text-center text-xs text-amber-900">{t("demoBanner", { services: mocked.join(" / ") })}</p>
+        <p className="bg-amber-100 px-4 py-1.5 text-center text-xs text-amber-900">
+          {t("demoBanner", { services: mocked.join(" / ") })}
+          {/* データがブラウザにだけ保存されるのは、Supabase もデモのときだけ */}
+          {MOCK_SUPABASE && ` ${t("demoBannerLocal")}`}
+        </p>
       )}
       <header className="sticky top-0 z-30 border-b bg-background/90 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-5xl items-center gap-2 px-4 sm:gap-3">
