@@ -2,10 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import { getUser } from "@/lib/supabase/server";
+import { isRegistered } from "@/lib/supabase/user";
 
 async function toggle(table: "post_likes" | "post_saves", postId: string) {
   const { supabase, user } = await getUser();
-  if (!user) return { error: "login_required" as const };
+  if (!isRegistered(user)) return { error: "login_required" as const };
   const { data: existing } = await supabase
     .from(table)
     .select("id")

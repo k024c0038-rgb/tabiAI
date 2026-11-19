@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MapView, type MapPoint } from "@/components/map-view";
 import { PlacePhoto } from "@/components/place-photo";
+import { fetchAsGuestIfNeeded } from "@/lib/supabase/guest";
 
 export type NearbySpot = {
   placeId: string;
@@ -75,11 +76,15 @@ export function NearbyExplorer({
   async function generateCourses() {
     setLoading(true);
     setError(null);
-    const res = await fetch("/api/nearby-route", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ placeId: main.placeId, name: main.name, transport, language: locale }),
-    });
+    const res = await fetchAsGuestIfNeeded(
+      "/api/nearby-route",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ placeId: main.placeId, name: main.name, transport, language: locale }),
+      },
+      tc("guest"),
+    );
     setLoading(false);
     if (res.status === 401) return router.push(`/login?next=${encodeURIComponent(window.location.pathname)}`);
     if (!res.ok) return setError(tc("error"));

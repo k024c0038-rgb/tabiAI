@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import { getUser } from "@/lib/supabase/server";
+import { isRegistered } from "@/lib/supabase/user";
 import { LOCALES, TRANSPORTS } from "@/lib/types";
 
 const Int = z.number().int().min(0).max(100_000_000).nullable();
@@ -40,7 +41,7 @@ export type PostInput = z.infer<typeof PostInputSchema>;
 
 export async function createPost(input: PostInput) {
   const { supabase, user } = await getUser();
-  if (!user) return { error: "login_required" as const };
+  if (!isRegistered(user)) return { error: "login_required" as const };
   const parsed = PostInputSchema.safeParse(input);
   if (!parsed.success) return { error: "invalid" as const };
   const v = parsed.data;

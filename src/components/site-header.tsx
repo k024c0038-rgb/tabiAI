@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { getUser } from "@/lib/supabase/server";
+import { isRegistered } from "@/lib/supabase/user";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { Button } from "@/components/ui/button";
 import { mockedServices } from "@/lib/mock/config";
@@ -28,7 +29,7 @@ export async function SiteHeader() {
             </Link>
           </nav>
           <LanguageSwitcher />
-          {user ? (
+          {isRegistered(user) ? (
             <form action="/auth/signout" method="post">
               <Button variant="ghost" size="sm" type="submit">
                 {t("logout")}

@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
 import { PlaceAutocomplete } from "@/components/place-autocomplete";
+import { fetchAsGuestIfNeeded } from "@/lib/supabase/guest";
 import { LOCALES, PREFERENCES, TRANSPORTS, type Locale, type MainPlace, type PlanRequest } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -51,11 +52,12 @@ export function PlanForm({ initial }: { initial: PlanFormInitial }) {
       language,
     };
     try {
-      const res = await fetch("/api/plan", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
+      // 未ログインならゲストとして自動でログインしてから作成する（ゲストが使えない場合だけログイン画面へ）
+      const res = await fetchAsGuestIfNeeded(
+        "/api/plan",
+        { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) },
+        tc("guest"),
+      );
       if (res.status === 401) {
         router.push(`/login?next=${encodeURIComponent("/")}`);
         return;

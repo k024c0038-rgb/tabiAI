@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getUser } from "@/lib/supabase/server";
+import { isRegistered } from "@/lib/supabase/user";
 import type { DbPlanSpot, DbTripPlan } from "@/lib/types";
 import { PostForm, type RouteSpotDraft } from "@/components/posts/post-form";
 
@@ -10,7 +11,7 @@ export default async function NewPostPage({ searchParams }: { searchParams: Sear
   const { fromPlan } = await searchParams;
   const t = await getTranslations("newPost");
   const { supabase, user } = await getUser();
-  if (!user) redirect(`/login?next=${encodeURIComponent(fromPlan ? `/posts/new?fromPlan=${fromPlan}` : "/posts/new")}`);
+  if (!isRegistered(user)) redirect(`/login?next=${encodeURIComponent(fromPlan ? `/posts/new?fromPlan=${fromPlan}` : "/posts/new")}`);
 
   // 「このプランで旅行した」から開いた場合は、プランのスポットと順番を最初から入力しておく
   let initial: Parameters<typeof PostForm>[0]["initial"];

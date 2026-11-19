@@ -17,7 +17,7 @@ export function LoginForm() {
   const next = useSearchParams().get("next") ?? "/";
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
-  const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [state, setState] = useState<"idle" | "sending" | "sent" | "error" | "rateLimit">("idle");
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -30,7 +30,9 @@ export function LoginForm() {
         data: name ? { display_name: name } : undefined,
       },
     });
-    setState(error ? "error" : "sent");
+    if (error) console.error("signInWithOtp failed", error);
+    // 無料プランの Supabase はメール送信回数が少ないため、上限のときは理由を伝える
+    setState(!error ? "sent" : error.status === 429 || error.code?.includes("rate_limit") ? "rateLimit" : "error");
   }
 
   return (
@@ -59,9 +61,11 @@ export function LoginForm() {
               <Input id="name" value={name} maxLength={40} onChange={(e) => setName(e.target.value)} />
             </div>
             {state === "error" && <p className="text-sm text-destructive">{tc("error")}</p>}
+            {state === "rateLimit" && <p className="text-sm text-destructive">{t("rateLimit")}</p>}
             <Button type="submit" className="w-full" disabled={state === "sending"}>
               {t("send")}
             </Button>
+            <p className="text-xs text-muted-foreground">{t("guestNote")}</p>
           </form>
         )}
       </CardContent>
